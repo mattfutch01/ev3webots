@@ -1,0 +1,849 @@
+# VRML_SIM R2023b utf8
+# Mindstorms Rover model based on Lego's Mindstorms kit.
+
+# Define a new PROTO called EV3Mindstorm
+PROTO EV3Mindstorm [
+  field SFVec3f translation 0 0 0             # Translation in 3D space.
+  field SFRotation rotation 0 0 1 0           # Rotation as quaternion.
+  field SFString name "EV3Mindstorm"          # Name of the solid.
+  field SFString controller "main"           # Controller name for the robot.
+  field MFString controllerArgs []           # Arguments for the robot's controller.
+  field SFString window "<generic>"          # Window type for the robot.
+  field SFString customData ""               # Custom data for the robot.
+  field SFBool supervisor TRUE              # Is the robot controlled by a supervisor.
+  field SFBool synchronization TRUE          # Is robot's movement synchronized.
+  field MFNode extensionSlot []              # Slot for adding new nodes.
+]
+{
+  # Inherit properties from the Robot node
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    window IS window
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    name IS name
+    children [
+      Group {
+        children IS extensionSlot
+      }
+      DEF SURFACE_LED LED {
+        translation -.08 0 .13
+        rotation 0 0 1 0
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor .5 .5 .5
+              roughness 0.2
+              metalness 0.5
+              emissiveIntensity 100
+            }
+            geometry Box {
+              size 0.02 0.025 0.003
+            }
+          }
+        ]
+        name "LED"
+        color [
+          0 0 0,     # Black
+          0 0 1,     # Blue
+          0 1 0,     # Green
+          1 1 0,     # Yellow
+          1 0 0,     # Red
+          1 1 1,     # White
+          0.65 0.35 0.13,   # Brown
+          1 0.65 0,  # Orange
+          0.5 0 0.5  # Purple
+        ]
+      }
+      DEF SPEAKER Speaker {
+        translation 0 0 0.06
+        rotation 0 0 1 0
+        name "Speaker"
+      }
+
+      DEF GYROSCOPE Gyro {
+        translation -.04 0 .135
+        name "S2"
+        xAxis FALSE
+        yAxis FALSE
+        zAxis TRUE
+        resolution .0174
+      }
+      DEF DISPLAY Display {
+        name "_screen_"
+        width 178
+        height 128
+      }
+        
+      # Define a hinge joint for the left wheel
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0 1 0
+          anchor 0 0 0.03175
+        }
+        device [
+          RotationalMotor {
+            name "A"
+          }
+          PositionSensor {
+            name "left wheel sensor"
+            noise 0.0523333
+            resolution 0.01745329
+          }
+        ]
+        endPoint Solid {
+          translation 0 0.0635 0.03175
+          rotation 1 0 0 1.5708
+          children [
+            DEF FRONT_WHEEL Shape {
+              appearance DEF BLACK PBRAppearance {
+                baseColor 0.0 0.0 0.0
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.0254
+                radius 0.03175
+                subdivision 24
+              }
+            }
+          ]
+          name "left wheel"
+          boundingObject DEF FRONT_BOUNDING_WHEEL Pose {
+            rotation 0 0 0 0
+            children [
+              Cylinder {
+                height 0.0254
+                radius 0.03175
+              }
+            ]
+          }
+          physics DEF FRONT_WHEEL_PHYSICS Physics {
+            density -1
+            mass 0.025
+          }
+        }
+      }
+      
+      # Define a hinge joint for the right wheel
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0 1 0
+          anchor 0 0 0.03175
+        }
+        device [
+          RotationalMotor {
+            name "B"
+          }
+          PositionSensor {
+            name "right wheel sensor"
+            noise 0.0523333
+            resolution 0.01745329
+          }
+        ]
+        endPoint Solid {
+          translation 0 -0.0635 0.03175
+          rotation 1 0 0 1.5708
+          children [
+            USE FRONT_WHEEL
+          ]
+          name "Right wheel"
+          boundingObject USE FRONT_BOUNDING_WHEEL
+          physics USE FRONT_WHEEL_PHYSICS
+        }
+      }
+      
+      # Define a hinge joint for the back wheel
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0 1 0
+          anchor 0 0 0.03175
+        }
+        device [
+          RotationalMotor {
+            name "Back"
+          }
+        ]       
+        endPoint Solid {
+          translation -.1345 0 0.01
+          rotation 1 0 0 1.5708
+          children [
+            Shape {
+              appearance USE BLACK
+              geometry Cylinder {
+                height 0.0025
+                radius 0.01
+                subdivision 24
+              }
+            }
+          ]
+          name "Back wheel"
+          boundingObject Pose {
+            children [
+              Cylinder {
+                height 0.0025
+                radius 0.01
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.005
+          }
+        }
+      }
+      
+      # Define the bumper using Transforms and Shapes
+      Transform {
+        ######################################### Adjust this to move the entire bumper #########################################
+        translation .06 0.0635 0.05  
+        rotation 0 0 0 0
+        #########################################################################################################################
+        children [
+          Group {
+            children [
+               DEF LEFT_BUMPER TouchSensor {
+                translation .03 0 0
+                name "S1"
+                boundingObject Box {
+                  size 0.017 .005 .005
+                }
+                physics DEF BUMPER_PHYSICS Physics {
+                  density -1
+                  mass 0.001
+                }
+                lookupTable [
+                  0 0 0 0.001 1 0
+                ]
+              }
+              
+              # Define the main body of the bumper
+              Solid {
+                children [
+                  Shape {
+                    appearance DEF GREY PBRAppearance {
+                      baseColor 0.55 .55 .55
+                      roughness 1
+                      metalness 0
+                    }
+                    geometry Box {
+                      size 0.04 .022 .022
+                    }
+                  }
+                ]
+                name "bumper body"
+                boundingObject Pose {
+                  children [
+                    Box {
+                      size 0.04 .022 .022
+                    }
+                  ]
+                }
+                physics DEF NEGLIGABLE_PHYSICS Physics {
+                }
+              }
+
+              # Define the first red marking on the bumper
+              Pose {
+                translation .02 0 0
+                children [
+                  Shape {
+                    appearance DEF RED PBRAppearance {
+                      baseColor 1 0 0
+                      roughness 1
+                      metalness 0
+                    }
+                    geometry Box {
+                      size 0.0025 .005 .02
+                    }
+                  }
+                ]
+              }
+              
+              # Define the second red marking on the bumper
+              Pose {
+                translation .02 0 0
+                children [
+                  Shape {
+                    appearance USE RED
+                    geometry Box {
+                      size 0.0025 .02 .005 
+                    }
+                  }
+                ]
+              }
+              
+              # Define the third red marking on the bumper
+              Pose {
+                translation .022 0 0
+                children [
+                  Shape {
+                    appearance USE RED
+                    geometry Box {
+                      size 0.002 .007 .007 
+                    }
+                  }
+                ]
+              }
+              
+              # Define the bumper tip
+              Solid {
+                translation .03 0 0
+                children [
+                  Shape {
+                    appearance PBRAppearance {
+                      baseColor 0.66 .66 .66
+                      roughness 1
+                      metalness 0
+                    }
+                    geometry Box {
+                      size 0.017 .005 .005
+                    }
+                  }
+                ]
+                name "bumper tip"
+              }
+            ]
+          }
+        ]
+      }
+      
+      # Define the ultrasonic sensor and its components
+      Transform {      
+        ######################################### Adjust this to move the entire ultrasonic #########################################
+        translation 0.025 .03 .135
+        rotation 0 0 1 1.1
+        ###########################################################################################################################
+        children [
+          # Define a group named 'ultrasonic'
+          DEF ULTRASONIC_SENSOR DistanceSensor {
+            translation .0375 0 0
+            rotation 0 0 1 0
+            name "S4"
+            lookupTable [
+              0 2550 0, 
+              0.029 2550 0,
+              0.03 30 .004,
+              2.5 2500 .004,
+              2.51 2550 0
+            ]
+            type "generic"
+          }
+          DEF ultrasonic Group {
+            children [
+              # Front cover of the ultrasonic sensor
+              Pose {
+                translation .015 0 .002
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.005 .05 .02
+                    }
+                  }
+                ]
+              }
+              
+              # Black front cover of the ultrasonic sensor
+              Solid {
+                translation .0275 0 .002
+                children [
+                  Shape {
+                    appearance USE BLACK
+                    geometry Box {
+                      size 0.02 .05 .02
+                    }
+                  }
+                ]
+                name "BlackFront"
+                boundingObject Pose {
+                  children [
+                    Box {
+                      size 0.02 .05 .02
+                    }
+                  ]
+                }
+                physics USE NEGLIGABLE_PHYSICS
+              }
+              
+              # Main body of the ultrasonic sensor
+              Pose {
+                translation 0 0 0
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.025 .025 .02
+                    }
+                  }
+                ]
+              }
+              
+              # Red transmitter on the right side
+              Pose {
+                translation .0375 .0125  .002
+                rotation 0 1 0 1.57
+                children [
+                  Shape {
+                    appearance USE RED
+                    geometry Cylinder {
+                      height 0.001
+                      radius 0.008
+                      subdivision 24
+                    }
+                  }
+                ]
+              }
+              
+              # Red transmitter on the left side
+              Pose {
+                translation .0375 -.0125  .002
+                rotation 0 1 0 1.57
+                children [
+                  Shape {
+                    appearance USE RED
+                    geometry Cylinder {
+                      height 0.001
+                      radius 0.008
+                      subdivision 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+
+      # Define the robot body using Transforms and Shapes
+      Transform {
+        translation -0.0508 0 0.0762  # Adjust the robot's position
+        children [
+          DEF Body Group {
+            children [
+              # Define the EV3 body
+              Pose {
+                translation 0 0 0
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.13 0.09 0.11
+                    }
+                  }
+                ]
+              }
+              
+              # Define the straight bumper anchor
+              Pose {
+                translation .075 0.031 -.025
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.031 .008 .008
+                    }
+                  }
+                ]
+              }
+              
+              # Define the diagonal bumper anchor
+              Pose {
+                translation .10075 0.043 -.025
+                rotation 0 0 1 -.785
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.008 .0375 .008
+                    }
+                  }
+                ]
+              }
+              
+              # Define the back wheel horizontal anchor
+              Pose {
+                translation -.07495 0 -.044
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.02 0.005 0.005
+                    }
+                  }
+                ]
+              }
+              
+              # Define the back wheel left vertical leg
+              Pose {
+                translation -.0837 .0035 -.055
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.0025 0.0025 0.027
+                    }
+                  }
+                ]
+              }
+              
+              # Define the back wheel right vertical leg
+              Pose {
+                translation -.0837 -.0035 -.055
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.0025 0.0025 0.027
+                    }
+                  }
+                ]
+              }
+              
+              # Define the back wheel axel
+              Pose {
+                translation -.0837 0 -0.0662
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.0025 0.007 0.0025
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the front wheel axel
+              Pose {
+                translation .05 0 -0.04445
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.01 0.11 0.01
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the screen and its appearance
+              Pose {
+                translation .035 0 .0551
+                children [
+                  Shape {
+                    appearance DEF DARKGREY PBRAppearance{
+                      baseColor .3 .3 .3
+                      roughness 1
+                      metalness 0
+                    }
+                    geometry Box {
+                      size 0.037 0.065 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the screen border
+              Pose {
+                translation .035 0 .055
+                children [
+                  Shape {
+                    appearance USE BLACK
+                    geometry Box {
+                      size 0.04 0.07 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the button under the screen
+              Pose {
+                translation -.01 .027 .0551
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.007 0.015 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the black line to the top button
+              Pose {
+                translation .001 0 .0551
+                children [
+                  Shape {
+                    appearance PBRAppearance{
+                      baseColor .2 .2 .2
+                      roughness 1
+                      metalness 0
+                    }
+                    geometry Box {
+                      size 0.028 0.002 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the white area around buttons
+              Pose {
+                translation -.028 0 .055
+                children [
+                  Shape {
+                    appearance DEF WHITE PBRAppearance{
+                      baseColor 1 1 1
+                      roughness 1
+                      metalness 0
+                    }
+                    geometry Box {
+                      size 0.045 0.09 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the center button
+              Pose {
+                translation -.028 0 .0551
+                children [
+                  Shape {
+                    appearance USE DARKGREY
+                    geometry Box {
+                      size 0.0075 0.0075 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the top button
+              Pose {
+                translation -.018 0 .0551
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.01 0.015 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the bottom button
+              Pose {
+                translation -.038 0 .0551
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.01 0.015 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the right button
+              Pose {
+                translation -.028 -.012 .0551
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.0075 0.012 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the left button
+              Pose {
+                translation -.028 .012 .0551
+                children [
+                  Shape {
+                    appearance USE GREY
+                    geometry Box {
+                      size 0.0075 0.012 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the "E" on the screen
+              Pose {
+                translation -.058 .04 .055
+                children [
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.005 0.001 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the "E" on the screen
+              Pose {
+                translation -.056 .038 .055
+                children [
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.001 0.005 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the "E" on the screen
+              Pose {
+                translation -.058 .038 .055
+                children [
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.001 0.005 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the "E" on the screen
+              Pose {
+                translation -.060 .038 .055
+                children [
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.001 0.005 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the "V"
+              Pose{ # V
+                translation -.058 .033 .055
+                rotation 0 0 1 -1
+                children[
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.001 0.0055 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              Pose{ # V
+                translation -.058 .0304 .055
+                rotation 0 0 1 1
+                children[
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.001 0.0055 0.0005
+                    }    
+                  }
+                ]
+              }
+              
+              # Define the 3 shape
+              Pose{ # 3
+                translation -.058 .0235 .055
+                children[
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.005 0.001 0.0005
+                    }    
+                  }
+                ]
+              }
+              Pose{ # 3
+                translation -.056 .0255 .055
+                children[
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.001 0.005 0.0005
+                    }    
+                  }
+                ]
+              }
+              Pose{ # 3
+                translation -.058 .0255 .055
+                children[
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.001 0.005 0.0005
+                    }    
+                  }
+                ]
+              }
+              Pose{ # 3
+                translation -.06 .0255 .055
+                children[
+                  Shape {
+                    appearance USE WHITE
+                    geometry Box {
+                      size 0.001 0.005 0.0005
+                    }    
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+    model "EV3"    
+    
+    # Define colliders for the body of the robot
+    boundingObject Group {
+      children [
+        Pose { # EV3 Body
+          translation -0.0508 0 0.0762
+          children [
+            Box {
+              size 0.13 0.09 0.11
+            }
+          ]
+        }
+        Pose{ # Back wheel Horizontal anchor
+          translation -.12575 0 .0322
+          children [
+            Box {
+              size 0.02 0.005 .005
+            }
+          ]
+        }
+        Pose{ # Back wheel left vertical anchor
+          translation -.1345 .0035 .0212
+          children [
+            Box {
+              size 0.0025 0.0025 0.027
+            }
+          ]
+        }
+        Pose{ # Back wheel right vertical anchor
+          translation -.1345 -.0035 .0212
+          children [
+            Box {
+              size 0.0025 0.0025 0.027
+            }
+          ]
+        }
+    ]
+  }
+  physics Physics {
+    density -1
+    mass 0.550
+    centerOfMass [-0.0254 0 0.0381]
+  }
+  }
+}

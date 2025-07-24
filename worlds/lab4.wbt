@@ -1,0 +1,189 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "../protos/Floor.proto"
+EXTERNPROTO "../protos/Wall.proto"
+EXTERNPROTO "../protos/EV3Mindstorm.proto"
+EXTERNPROTO "../protos/BoundaryLine.proto"
+EXTERNPROTO "../protos/GoalCircle.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.0074897786995471016 0.9998905670235642 0.012757632708579904 1.2308216331331037
+  position -2.4408627324972088 -0.24487458839122012 6.451873084632375
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+  floorSize 4.5 4.5
+}
+Wall {
+  translation -1.41828 1.12724 0.075
+  rotation 0 0 -1 2.0944
+  name "wall1"
+  size 0.8 0.02 0.15
+}
+Wall {
+  translation -1.51204 0.61869 0.075
+  rotation 0 0 1 -1.047195307179586
+  name "wall2"
+  size 0.4 0.02 0.15
+}
+Wall {
+  translation -0.9654 -1.24807 0.075
+  rotation 0 0 1 -1.047195307179586
+  name "wall2(1)"
+  size 0.4 0.02 0.15
+}
+Wall {
+  translation -1.1444 1.05978 0.075
+  rotation 0 0 -1 -1.7382253071795866
+  name "wall3"
+  size 0.85 0.02 0.15
+}
+Wall {
+  translation -0.562636 -1.00209 0.075
+  rotation 0 0 -1 -1.7382253071795866
+  name "wall3(1)"
+  size 0.45 0.02 0.15
+}
+Wall {
+  translation -1.24342 0.548831 0.075
+  rotation -3.57894e-08 9.58953e-09 -1 -0.5236053071795865
+  name "wall4"
+  size 0.4 0.02 0.15
+}
+Wall {
+  translation -0.69678 -1.31791 0.075
+  rotation -3.57894e-08 9.58953e-09 -1 -0.5236053071795865
+  name "wall4(1)"
+  size 0.4 0.02 0.15
+}
+Wall {
+  translation -0.94214 -0.870269 0.075
+  rotation 1.66101e-08 -9.5897e-09 1 1.0472
+  name "wall18"
+  size 0.5 0.02 0.15
+}
+Wall {
+  translation -0.707919 -0.722048 0.075
+  rotation 0 0 -1 -2.6180053071795863
+  name "wall5(1)"
+  size 0.25 0.02 0.15
+}
+Wall {
+  translation 0.391723 -0.39581 0.075
+  rotation 0 0 -1 -2.094405307179586
+  name "wall6"
+  size 1 0.02 0.15
+}
+Wall {
+  translation 0.1294 -0.462495 0.075
+  rotation 0 0 -1 -1.5708053071795867
+  name "wall7"
+  size 1 0.02 0.15
+}
+Wall {
+  translation 0.382397 -0.897407 0.075
+  rotation 0 0 -1 -0.27000030610042525
+  name "wall8"
+  size 0.525 0.02 0.15
+}
+Wall {
+  translation -0.233057 1.88963 0.075
+  rotation 0 0 -1 -0.27000030610042525
+  name "wall9"
+  size 0.525 0.02 0.15
+}
+Wall {
+  translation -0.407331 1.58189 0.075
+  rotation 0 0 1 1.8408
+  name "wall10"
+  size 0.525 0.02 0.15
+}
+Wall {
+  translation -0.0887751 1.3392 0.075
+  rotation 0 0 -1 -0.008205307179586008
+  name "wall11"
+  size 0.525 0.02 0.15
+}
+Wall {
+  translation 0.170977 1.59881 0.075
+  rotation 0 0 1 1.579
+  name "wall12"
+  size 0.525 0.02 0.15
+}
+Wall {
+  translation 0.0861694 1.90395 0.075
+  rotation 0 0 -1 0.515396
+  name "wall13"
+  size 0.2 0.02 0.15
+}
+Wall {
+  translation -0.185684 0.733429 0.075
+  rotation 0 0 -1 -0.008205307179586008
+  name "wall14"
+  size 0.5 0.02 0.15
+}
+Wall {
+  translation -0.574563 0.473919 0.075
+  rotation 0 0 1 1.0554
+  name "wall15"
+  size 0.6 0.02 0.15
+}
+Wall {
+  translation -0.667046 0.168608 0.075
+  rotation 0 0 1 2.3644
+  name "wall16"
+  size 0.17 0.02 0.15
+}
+Wall {
+  translation -0.281401 0.419915 0.075
+  rotation 0 0 1 0.75
+  name "wall17"
+  size 0.925 0.02 0.15
+}
+EV3Mindstorm {
+  translation -2.10074 1.43146 0.00177485
+  rotation 0.003382309798935352 0.00816561951458692 0.9999609405563633 0
+}
+BoundaryLine {
+  translation -2 0 0
+  size 4 0.01 0.001
+}
+BoundaryLine {
+  translation 0 2 0
+  rotation 0 0 1 0
+  name "boundaryline2"
+  size 4 0.01 0.001
+}
+BoundaryLine {
+  translation 0 -2 0
+  rotation 0 0 -1 0
+  name "boundaryline3"
+  size 4 0.01 0.001
+}
+BoundaryLine {
+  translation 2 0 0
+  rotation 0 0 1 1.57
+  name "boundaryline4"
+  size 4 0.01 0.001
+}
+BoundaryLine {
+  translation -0.475919 0.230624 0
+  rotation 0 0 1 2.45
+  name "M Line"
+  size 3.95 0.01 0.001
+}
+GoalCircle {
+  translation 1 -1 0
+}
+GoalCircle {
+  translation -2 1.5 0
+  name "Start"
+  radius 0.01
+}
